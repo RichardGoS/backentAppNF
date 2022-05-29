@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.developer.naturalfisher.models.entity.Venta;
-import com.developer.naturalfisher.models.obj.DetalleVentas;
 import com.developer.naturalfisher.models.service.IItemVentaService;
 import com.developer.naturalfisher.models.service.IVentaService;
+import com.developer.naturalfisher.models.transporte.DetalleVentas;
 
 /**
  * de RagooS
@@ -73,6 +73,7 @@ public class VentaRestController {
 	
 	@PostMapping(value = "/save")
 	public Venta save(@RequestBody Venta venta) {
+		System.out.println("#### INICIA EL LLAMADO SERVICE VENTA SAVE ####");
 		return ventaService.save(venta);
 	}
 

@@ -3,6 +3,7 @@ package com.developer.naturalfisher.models.service;
 import java.util.Date;
 import java.util.List;
 
+import com.developer.naturalfisher.models.entity.ItemPromocionVenta;
 import com.developer.naturalfisher.models.entity.ItemVenta;
 
 /**
@@ -17,4 +18,6 @@ public interface IItemVentaService {
 	public ItemVenta save(ItemVenta itemNew);
 	public List<ItemVenta> findItemsVentasPorProducto(Long id);
 	public List<ItemVenta> findItemsVentasMayorFechaPorProducto(Long id, Date fecha);
+	
+	public List<ItemPromocionVenta> obtenerItemsVentasMayorAFechaConPromocionPorProducto(Date fecha, Long producto_id);
 }

@@ -16,7 +16,7 @@ import com.developer.naturalfisher.models.entity.Cliente;
 
 public interface IClienteDao extends JpaRepository<Cliente, Long> {
 	
-	@Query(nativeQuery = false,value = " SELECT v FROM Cliente v WHERE estado = ?1")
+	@Query(nativeQuery = false,value = " SELECT v FROM Cliente v WHERE estado = ?1 ORDER BY nombre")
 	List<Cliente> findAll_Estado(String estado);
 
 }

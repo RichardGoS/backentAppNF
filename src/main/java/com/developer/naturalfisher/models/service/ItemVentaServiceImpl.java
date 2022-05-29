@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.developer.naturalfisher.models.dao.IItemVentaDao;
+import com.developer.naturalfisher.models.entity.ItemPromocionVenta;
 import com.developer.naturalfisher.models.entity.ItemVenta;
+import com.developer.naturalfisher.models.entity.PromocionVenta;
 import com.developer.naturalfisher.models.entity.Venta;
 
 /**
@@ -115,6 +117,51 @@ public class ItemVentaServiceImpl implements IItemVentaService {
 		}
 		
 		return items;
+	}
+
+
+	/**
+	 * 
+	 * @author RagooS
+	 * @Descripccion Metodo permite obtener los items registrados de las ventas mayores a la fecha y que promocion venta sea diferente de null
+	 * @fecha 21/05/2022
+	 */
+	@Override
+	public List<ItemPromocionVenta> obtenerItemsVentasMayorAFechaConPromocionPorProducto(Date fecha, Long producto_id) {
+		// TODO Auto-generated method stub
+		
+		String strItems = itemDao.obtenerItemsVentasMayorAFechaConPromocionPorProducto(fecha, producto_id);
+		List<ItemPromocionVenta> itemsPromo = new ArrayList<>();
+		
+		if(strItems!= null && !strItems.equals("")) {
+			if(strItems.contains(",")) {
+				String[] dataStrItemsVenta = strItems.split(",");
+				for(String datos: dataStrItemsVenta) {
+					if(datos.contains("|")) {
+						String[] dataStrItems = strItems.split("|");
+						for(String datosItem: dataStrItems) {
+							if(datosItem.contains(";")) {
+								String[] data = datos.split(";");
+								
+								ItemPromocionVenta itemPromocionVenta = new ItemPromocionVenta();
+								PromocionVenta promocionVenta = new PromocionVenta();
+								
+								promocionVenta.setId(Long.parseLong(data[0]));
+								itemPromocionVenta.setId(Long.parseLong(data[1]));
+								itemPromocionVenta.setCant_peso(Double.parseDouble(data[2]));
+								itemPromocionVenta.setTotal(Double.parseDouble(data[3]));
+								
+								itemsPromo.add(itemPromocionVenta);
+								
+							}
+						}
+					}
+				}
+				
+			}
+		}
+		
+		return itemsPromo;
 	}	
 
 }

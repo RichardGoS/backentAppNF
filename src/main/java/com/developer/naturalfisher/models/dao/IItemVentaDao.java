@@ -22,5 +22,8 @@ public interface IItemVentaDao extends JpaRepository<ItemVenta, Long>{
 	
 	@Procedure(name = "obtenerItemsVentasPorProductoMayorAFecha")
 	String obtenerItemsVentasPorProductoMayorAFecha(@Param("product_id") Long product_id, @Param("fecha_inventario") Date fecha_inventario);
+	
+	@Procedure(name = "obtenerItemsVentasMayorAFechaConPromocionPorProducto")
+	String obtenerItemsVentasMayorAFechaConPromocionPorProducto(@Param("fecha_parametro") Date fecha_parametro, @Param("product_id") Long id_producto);
 
 }

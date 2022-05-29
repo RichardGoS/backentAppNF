@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.developer.naturalfisher.models.dao.IProductoDao;
 import com.developer.naturalfisher.models.entity.Bodega;
 import com.developer.naturalfisher.models.entity.Producto;
+import com.developer.naturalfisher.models.transporte.ProductosTransporte;
 import com.developer.naturalfisher.utilidades.EnumParametros;
 
 /**
@@ -28,6 +29,9 @@ public class ProductoServiceImpl implements IProductoService {
 	
 	@Autowired
 	IBodegaService bodegaService;
+	
+	@Autowired
+	IPromocionService promocionService;
 
 	
 	/**
@@ -194,6 +198,23 @@ public class ProductoServiceImpl implements IProductoService {
 		
 		
 		return productos;
+	}
+
+	/**
+     * @Autor RagooS
+     * @Descripccion Metodo permite listar los todos los productos que se tienen
+     * @Fecha 06/05/2022
+     */
+	@Override
+	public ProductosTransporte findProductosGeneralActivos() {
+		// TODO Auto-generated method stub
+		
+		ProductosTransporte productosTransporte = new ProductosTransporte();
+		
+		productosTransporte.setProductos(findAll_ActivoVenta());
+		productosTransporte.setPromocion(promocionService.findAll_estadoActivo());
+		
+		return productosTransporte;
 	}
 
 }

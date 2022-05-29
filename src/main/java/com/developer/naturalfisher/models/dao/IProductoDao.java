@@ -22,7 +22,7 @@ public interface IProductoDao extends JpaRepository<Producto, Long> {
 	@Query(nativeQuery = false, value = " SELECT v FROM Producto v WHERE codigo = ?1 ")
 	Producto findByCodigo(String estado);
 	
-	@Query(nativeQuery = false, value = " SELECT v FROM Producto v WHERE realiza_inventario = ?1")
+	@Query(nativeQuery = false, value = " SELECT v FROM Producto v WHERE realiza_inventario = ?1 ORDER BY nombre")
 	List<Producto> findAll_EstadoInventario(String estado);
 
 }

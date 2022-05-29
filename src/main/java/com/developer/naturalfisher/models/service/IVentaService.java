@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.developer.naturalfisher.models.entity.Venta;
-import com.developer.naturalfisher.models.obj.DetalleVentas;
+import com.developer.naturalfisher.models.transporte.DetalleVentas;
 
 /**
  * de RagooS

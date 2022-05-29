@@ -3,6 +3,7 @@ package com.developer.naturalfisher.models.service;
 import java.util.List;
 
 import com.developer.naturalfisher.models.entity.Producto;
+import com.developer.naturalfisher.models.transporte.ProductosTransporte;
 
 /**
  * de RagooS
@@ -20,5 +21,6 @@ public interface IProductoService {
 	public List<Producto> findAll_Activo();
 	public boolean delete(Producto producto);
 	public List<Producto> findAll_ActivoVenta();
+	public ProductosTransporte findProductosGeneralActivos();
 	
 }

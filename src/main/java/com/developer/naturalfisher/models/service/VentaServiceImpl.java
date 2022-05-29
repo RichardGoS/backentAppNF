@@ -12,9 +12,12 @@ import com.developer.naturalfisher.models.entity.Bodega;
 import com.developer.naturalfisher.models.entity.Inventario;
 import com.developer.naturalfisher.models.entity.Inversion;
 import com.developer.naturalfisher.models.entity.ItemInversion;
+import com.developer.naturalfisher.models.entity.ItemPromocionVenta;
 import com.developer.naturalfisher.models.entity.ItemVenta;
+import com.developer.naturalfisher.models.entity.Promocion;
+import com.developer.naturalfisher.models.entity.PromocionVenta;
 import com.developer.naturalfisher.models.entity.Venta;
-import com.developer.naturalfisher.models.obj.DetalleVentas;
+import com.developer.naturalfisher.models.transporte.DetalleVentas;
 import com.developer.naturalfisher.utilidades.Utilidades;
 
 /**
@@ -49,6 +52,12 @@ public class VentaServiceImpl implements IVentaService {
 	@Autowired
 	IItemInversionService itemInversionService;
 	
+	@Autowired
+	IPromocionVentaService promocionVentaService;
+	
+	@Autowired
+	IItemPromocionVentaService itemPromocionVentaService;
+	
 	/**
      * --------------================ METODOS =================--------------------------------
      */
@@ -69,111 +78,115 @@ public class VentaServiceImpl implements IVentaService {
 		
 		if(ventaNew != null) {
 			ventaNew.setFecha(new Date());
+			System.out.println("#### ANTES DE REGISTRAR LA VENTA ####");
 			Venta ventaRegistrada = ventaDao.save(ventaNew);
+			System.out.println("#### DESPUES DE REGISTRAR LA VENTA ####");
 			ventaFinal = ventaRegistrada;
 			
 			if(ventaRegistrada != null && (ventaRegistrada.getItems() != null && !ventaRegistrada.getItems().isEmpty())) {
 				for(ItemVenta item : ventaRegistrada.getItems()) {
+					
+					System.out.println("#### INICIA PROCESO REGISTRO DE ITEMS VENTA ####");
+					
 					Venta vVacia = new Venta();
 					vVacia.setId(ventaRegistrada.getId());
 					item.setVenta(vVacia);
-					ItemVenta itemSave = itemVenta.save(item);
-					if(itemSave != null) {
+					
+					if(item.getProducto() != null ) {
+						System.out.println("#### PRODUCTO ####");
 						
-						exito = inventarioService.inventariar(itemSave.getProducto(), itemSave);
+						System.out.println("#### ANTES DE ALMACENAR EL ITEMVENTA PARA VENTA PRODUCTO ####");
+						ItemVenta itemSave = itemVenta.save(item);
+						System.out.println("#### DESPUES DE ALMACENAR EL ITEMVENTA PARA VENTA PRODUCTO ####");
 						
-						/*Bodega bodegaConsulta = bodegaService.findByIdProducto(item.getProducto().getId());
-						
-						
-						
-						Inventario inventario = inventarioService.seleccionarUtimoInventarioProducto(item.getProducto().getId());
-						
-						
-						if(inventario != null && bodegaConsulta != null) {
+						if(itemSave != null) {
+							System.out.println("#### ITEMVENTA PARA VENTA PRODUCTO ALMACENADO CON EXITO ####");
 							
-							Double diferencia = bodegaConsulta.getCant_disponible() - item.getCant_peso();
-							
-							if(diferencia >= 0) {
-								
-								Inventario nuevoInventario = new Inventario();
-								
-								List<ItemInversion> itemsInversiones = itemInversionService.obtenerItemsInversionesPorProductoMayorAFechaInventario(item.getProducto().getId(), inventario.getFecha());
-								
-								if(itemsInversiones != null && !itemsInversiones.isEmpty()) {
-									nuevoInventario = agregarInversionProducto(itemsInversiones);
-								}else {
-									nuevoInventario.setCant_comprado(0.0);
-								}
-								/*
-								List<Venta> ventasSinInventario = ventaDao.consultarVentasDespuesFechaInventarioDiferenteVentaRealizada(inventario.getFecha(), ventaRegistrada.getId());
-								
-								if(ventasSinInventario != null && !ventasSinInventario.isEmpty()) {
-									inventario = agregarVentaSinInventario(ventasSinInventario, inventario);
-								}*/
-								
-								//inventario.setCant_vendido(inventario.getCant_vendido() + item.getCant_peso());
-								
-								//inventario.setCant_diferencia(inventario.getCant_comprado() - inventario.getCant_vendido());
-							
-								
-								
-								//inventario.setId(null);
-								//nuevoInventario.setId(null);
-								//nuevoInventario.setCant_comprado(nuevoInventario.getCant_comprado());
-								
-								/*nuevoInventario.setFecha(new Date());
-								nuevoInventario.setCant_vendido(item.getCant_peso());
-								nuevoInventario.setCant_diferencia((bodegaConsulta.getCant_disponible() + nuevoInventario.getCant_comprado()) - nuevoInventario.getCant_vendido());
-								nuevoInventario.setProducto(inventario.getProducto());
-								
-								/*nuevoInventario = inventarioService.save(nuevoInventario);
-								
-								if(nuevoInventario != null) {
-									
-									Bodega bodega = guardarBodega(nuevoInventario, bodegaConsulta);
-									if(bodega!=null)
-										exito = true;
-								}	
-								
-							}
-							
-							
+							System.out.println("#### ANTES DE LLAMAR METODO INVENTARIAR ####");
+							exito = inventarioService.inventariar(itemSave.getProducto(), itemSave, null);
+							System.out.println("#### DESPUES DE LLAMAR METODO INVENTARIAR ####");
 						} else {
+							System.out.println("#### ITEMVENTA PARA VENTA PRODUCTO NO ALMACENADO *** ERRROR *** ####");
+						}
+					} else if(item.getPromocion_venta() != null) {
+						System.out.println("#### PROMOCION ####");
+						
+						PromocionVenta promocionVentaVacia = new PromocionVenta();
+						promocionVentaVacia.setPromocion(item.getPromocion_venta().getPromocion());
+						promocionVentaVacia.setTotal(item.getPromocion_venta().getTotal());
+						promocionVentaVacia.setGanancia(item.getPromocion_venta().getGanancia());
+						promocionVentaVacia.setTotalCalculado(item.getPromocion_venta().getTotalCalculado());
+						promocionVentaVacia.setPorcentage(item.getPromocion_venta().getPorcentage());
+						//promocionVentaVacia.setPromocionVentas(item.getPromocion_venta().getPromocionVentas());
+						
+						System.out.println("#### ANTES DE ALMACENAR LA PROMOCION VENTA ####");
+						PromocionVenta promocionVentaAlmacenada = promocionVentaService.save(promocionVentaVacia);
+						System.out.println("#### DESPUES DE ALMACENAR LA PROMOCION VENTA ####");
+						
+						if(promocionVentaAlmacenada != null) {
 							
-							inventario = new Inventario();
+							System.out.println("#### PROMOCION VENTA ALMACENADA CON EXITO ####");
 							
-							List<ItemInversion> inversiones = inversionService.findItemsByIdProducto(itemSave.getProducto().getId());
-							
-							//inversiones = obtenerItemsInversion(inversiones);
-							
-							/*if(inversiones != null && !inversiones.isEmpty()) {
+							if(item.getPromocion_venta().getItems_promocion() != null && !item.getPromocion_venta().getItems_promocion().isEmpty()) {
 								
-								inventario = agregarInversionProducto(inversiones);
-								
-								List<ItemVenta> itemsVenta = itemVenta.findItemsVentasPorProducto(itemSave.getProducto().getId());
-								
-								if(itemsVenta != null && !itemsVenta.isEmpty()) {
-									inventario = agregarVentaSinInventario(itemsVenta, inventario);
-								}
-								
-								inventario.setFecha(new Date());
-								inventario.setCant_diferencia(inventario.getCant_comprado() - inventario.getCant_vendido());
-								inventario.setProducto(itemSave.getProducto());
-								
-								Inventario invent = inventarioService.save(inventario);
-								
-								if(invent != null) {
-									Bodega bodega = guardarBodega(invent, bodegaConsulta);
+								for(ItemPromocionVenta itemPromo:item.getPromocion_venta().getItems_promocion()) {
 									
-									if(bodega!=null)
-										exito = true;
+									System.out.println("#### INICIA PROCESO REGISTRO DE ITEMS PROMOCION VENTA ####");
+									
+									ItemPromocionVenta itemPromocionVenta = new ItemPromocionVenta();
+									itemPromocionVenta.setProducto(itemPromo.getProducto());
+									itemPromocionVenta.setPromocion_venta(promocionVentaAlmacenada);
+									itemPromocionVenta.setPrecio_venta(itemPromo.getPrecio_venta());
+									itemPromocionVenta.setCant_peso(itemPromo.getCant_peso());
+									itemPromocionVenta.setTotal(itemPromo.getTotal());
+									
+									System.out.println("#### ANTES DE ALMACENAR EL ITEM PROMOCION VENTA ####");
+									ItemPromocionVenta itemPromocionVentaAlmacenada = itemPromocionVentaService.save(itemPromocionVenta);
+									System.out.println("#### DESPUES DE ALMACENAR EL ITEM PROMOCION VENTA ####");
+									
+									if(itemPromocionVentaAlmacenada!=null) {
+										System.out.println("#### ITEM PROMOCION VENTA ALMACENADA CON EXITO ####");
+										
+										System.out.println("#### ANTES DE LLAMAR A INVENTARIAR ####");
+										exito = inventarioService.inventariar(itemPromo.getProducto(), null, itemPromo);
+										System.out.println("#### DESPUES DE LLAMAR A INVENTARIAR ####");
+										
+									} else {
+										exito = false;
+										System.out.println("#### ERROR ITEM PROMOCION VENTA NO ALMACENADA ####");
+									}
 								}
 								
 							}
-						}*/
+							
+						}else {
+							System.out.println("#### ERROR PROMOCION VENTA NO ALMACENADA ####");
+							exito = false;
+						}
+						
+						
+						if(exito) {
+							item.setPromocion_venta(promocionVentaAlmacenada);
+							
+							System.out.println("#### ANTES DE ALMACENAR EL ITEMVENTA PARA VENTA PROMOCION ####");
+							
+							ItemVenta itemSave = itemVenta.save(item);
+							
+							System.out.println("#### DESPUES DE ALMACENAR EL ITEMVENTA PARA VENTA PROMOCION ####");
+							
+							if(itemSave != null) {
+								System.out.println("#### ITEMVENTA PARA VENTA PROMOCION ALMACENADO CON EXITO ####");
+							} else {
+								System.out.println("#### ITEMVENTA PARA VENTA PROMOCION NO ALMACENADO *** ERORR *** ####");
+								exito = false;
+							}
+						}
+						
 					}
+					
 				}
 			} else {
+				System.out.println("#### ERROR NO EXISTE VENTA O ITEMS_VENTAS ####");
 				ventaFinal = null;
 				exito = false;
 			}
@@ -182,6 +195,9 @@ public class VentaServiceImpl implements IVentaService {
 		
 		if(!exito) {
 			ventaFinal = null;
+			System.out.println("#### VENTA REALIZADA CON ERRORES ####");
+		} else {
+			System.out.println("#### VENTA REALIZADA CON EXITO ####");
 		}
 		
 		return ventaFinal;

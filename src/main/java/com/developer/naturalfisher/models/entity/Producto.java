@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "producto")
-@JsonIgnoreProperties({"items"})
+@JsonIgnoreProperties({"items", "items_promocion", "items_promocion_venta", "inventarios"})
 public class Producto implements Serializable {
 	
 	@Id
@@ -44,6 +44,10 @@ public class Producto implements Serializable {
 	@JsonIgnoreProperties({"producto", "hibernateLazyInitializer","handler"})
 	private List<ItemPromocion> items_promocion;
 	
+	@OneToMany(mappedBy = "producto")//, cascade = CascadeType.ALL, orphanRemoval = true
+	@JsonIgnoreProperties({"producto", "hibernateLazyInitializer","handler"})
+	private List<ItemPromocionVenta> items_promocion_venta;
+	
 	@OneToOne(mappedBy = "producto")
 	@JsonIgnoreProperties({"producto", "hibernateLazyInitializer","handler"})
 	private Bodega bodega;
@@ -58,7 +62,7 @@ public class Producto implements Serializable {
 	/**
 	 * Estado ACTIVO , INACTIVO 
 	 */
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 10)
 	private String estado;
 	
 	/**
@@ -169,6 +173,22 @@ public class Producto implements Serializable {
 
 	public void setRealiza_inventario(String realiza_inventario) {
 		this.realiza_inventario = realiza_inventario;
+	}
+
+	public List<ItemPromocion> getItems_promocion() {
+		return items_promocion;
+	}
+
+	public void setItems_promocion(List<ItemPromocion> items_promocion) {
+		this.items_promocion = items_promocion;
+	}
+
+	public List<ItemPromocionVenta> getItems_promocion_venta() {
+		return items_promocion_venta;
+	}
+
+	public void setItems_promocion_venta(List<ItemPromocionVenta> items_promocion_venta) {
+		this.items_promocion_venta = items_promocion_venta;
 	}
 
 	/**

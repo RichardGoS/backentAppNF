@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "promocion")
+@JsonIgnoreProperties({"ventas_promocion"})
 public class Promocion implements Serializable {
 	
 	/**
@@ -41,17 +42,31 @@ public class Promocion implements Serializable {
 	@Column(nullable = false, length = 500)
 	private String descripccion;
 	
-	@ManyToOne()
-	@JoinColumn(name = "venta_id")
-	@JsonIgnoreProperties({"promociones", "hibernateLazyInitializer","handler"})
-	private Venta venta;
-	
 	@Column(nullable = false)
 	private Double total;
 	
-	@OneToMany(mappedBy = "promocion", orphanRemoval = true)
+	@Column(nullable = false)
+	private Double totalCalculado;
+	
+	@Column(nullable = false)
+	private Double porcentage;
+	
+	@Column(nullable = false)
+	private Double ganancia;
+	
+	@OneToMany(mappedBy = "promocion")
 	@JsonIgnoreProperties({"promocion", "hibernateLazyInitializer","handler"})
-	private List<ItemPromocion> items;
+	private List<ItemPromocion> items_productos;
+	
+	@OneToMany(mappedBy = "promocion")
+	@JsonIgnoreProperties({"promocion", "hibernateLazyInitializer","handler"})
+	private List<PromocionVenta> ventas_promocion;
+	
+	/**
+	 * Estado ACTIVO , INACTIVO 
+	 */
+	@Column(nullable = false, length = 50)
+	private String estado;
 
 	public Long getId() {
 		return id;
@@ -59,14 +74,6 @@ public class Promocion implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Venta getVenta() {
-		return venta;
-	}
-
-	public void setVenta(Venta venta) {
-		this.venta = venta;
 	}
 
 	public Double getTotal() {
@@ -93,13 +100,52 @@ public class Promocion implements Serializable {
 		this.descripccion = descripccion;
 	}
 
-	public List<ItemPromocion> getItems() {
-		return items;
+	public List<ItemPromocion> getItems_productos() {
+		return items_productos;
 	}
 
-	public void setItems(List<ItemPromocion> items) {
-		this.items = items;
+	public void setItems_productos(List<ItemPromocion> items_productos) {
+		this.items_productos = items_productos;
 	}
-	
+
+	public List<PromocionVenta> getVentas_promocion() {
+		return ventas_promocion;
+	}
+
+	public void setVentas_promocion(List<PromocionVenta> ventas_promocion) {
+		this.ventas_promocion = ventas_promocion;
+	}
+
+	public Double getTotalCalculado() {
+		return totalCalculado;
+	}
+
+	public void setTotalCalculado(Double totalCalculado) {
+		this.totalCalculado = totalCalculado;
+	}
+
+	public Double getPorcentage() {
+		return porcentage;
+	}
+
+	public void setPorcentage(Double porcentage) {
+		this.porcentage = porcentage;
+	}
+
+	public Double getGanancia() {
+		return ganancia;
+	}
+
+	public void setGanancia(Double ganancia) {
+		this.ganancia = ganancia;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 
 }

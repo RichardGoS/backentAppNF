@@ -14,5 +14,8 @@ import com.developer.naturalfisher.models.entity.Promocion;
 public interface IPromocionService {
 	
 	public List<Promocion> findAll();
+	public List<Promocion> findAll_estadoActivo();
+	public Promocion save(Promocion promocionNew);
+	public boolean delete(Promocion promocion);
 
 }

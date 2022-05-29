@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.developer.naturalfisher.models.entity.Producto;
 import com.developer.naturalfisher.models.service.IProductoService;
+import com.developer.naturalfisher.models.transporte.ProductosTransporte;
 
 /**
  * de RagooS
@@ -34,8 +35,8 @@ public class ProductoRestController {
 	}
 	
 	@GetMapping("/productos")
-	public List<Producto> findAll(){
-		return productoService.findAll_Activo();
+	public ProductosTransporte findAll(){
+		return productoService.findProductosGeneralActivos();
 	}
 	
 	@GetMapping("/producto/codigo/{codigo}")
@@ -54,8 +55,13 @@ public class ProductoRestController {
 	}
 	
 	@GetMapping("/productosVenta")
-	public List<Producto> findAll_ActivoVenta(){
+	public ProductosTransporte findAll_ActivoVenta(){
+		return productoService.findProductosGeneralActivos();
+	}
+	
+	@GetMapping("/productosPromoVenta")
+	public List<Producto> findProductosGeneral() {
 		return productoService.findAll_ActivoVenta();
 	}
-
+	
 }

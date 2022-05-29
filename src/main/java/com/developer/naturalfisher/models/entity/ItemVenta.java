@@ -2,6 +2,7 @@ package com.developer.naturalfisher.models.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,6 +44,11 @@ public class ItemVenta implements Serializable {
 	@JoinColumn(name = "producto_id")
 	@JsonIgnoreProperties({"items", "hibernateLazyInitializer","handler"})
 	private Producto producto;
+	
+	//@OneToOne(mappedBy = "item_venta")
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "promocion_venta_id", referencedColumnName = "id")
+	private PromocionVenta promocion_venta;
 	
 	/**
 	 * Estado S , N 
@@ -112,6 +119,14 @@ public class ItemVenta implements Serializable {
 
 	public void setPrecio_distinto(Double precio_distinto) {
 		this.precio_distinto = precio_distinto;
+	}
+
+	public PromocionVenta getPromocion_venta() {
+		return promocion_venta;
+	}
+
+	public void setPromocion_venta(PromocionVenta promocion_venta) {
+		this.promocion_venta = promocion_venta;
 	}
 
 }

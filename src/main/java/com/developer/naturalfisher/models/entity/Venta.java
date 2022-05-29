@@ -39,10 +39,6 @@ public class Venta implements Serializable {
 	@JsonIgnoreProperties({"venta", "hibernateLazyInitializer","handler"})
 	private List<ItemVenta> items;
 	
-	@OneToMany(mappedBy = "venta", orphanRemoval = true)
-	@JsonIgnoreProperties({"venta", "hibernateLazyInitializer","handler"})
-	private List<Promocion> promociones;
-	
 	/*@ManyToMany(mappedBy = "ventas")
 	private Set<Producto> productos;*/
 	
@@ -93,16 +89,6 @@ public class Venta implements Serializable {
 	public void setItems(List<ItemVenta> items) {
 		this.items = items;
 	}
-
-	public List<Promocion> getPromociones() {
-		return promociones;
-	}
-
-	public void setPromociones(List<Promocion> promociones) {
-		this.promociones = promociones;
-	}
-
-
 
 	/**
 	 * 
