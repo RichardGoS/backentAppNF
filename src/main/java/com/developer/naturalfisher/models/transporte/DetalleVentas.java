@@ -1,4 +1,4 @@
-package com.developer.naturalfisher.models.obj;
+package com.developer.naturalfisher.models.transporte;
 
 import java.io.Serializable;
 import java.util.List;
