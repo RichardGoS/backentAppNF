@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.developer.naturalfisher.models.entity.Inversion;
 import com.developer.naturalfisher.models.entity.ItemInversion;
+import com.developer.naturalfisher.models.transporte.DetalleInversiones;
 
 /**
  * de RagooS
@@ -15,10 +16,14 @@ import com.developer.naturalfisher.models.entity.ItemInversion;
 
 public interface IInversionService {
 	
-	public List<Inversion> findAll();
+	public DetalleInversiones findAll();
 	public List<Inversion> buscarUltimaFechaInventariada(Date fecha);
 	public List<ItemInversion> findItemsByIdProducto(Long id);
 	public Inversion save(Inversion inversion);
 	public Inversion findById(Long id);
+	public DetalleInversiones detalleInversionesEnMes(String fecha);
+	public List<Inversion> InversionesEnMes(String fecha);
+	public Double consultarTotalInversionRango(String fecha);
+	public List<Inversion> consultarInversionesEnFecha(String fecha);
 
 }

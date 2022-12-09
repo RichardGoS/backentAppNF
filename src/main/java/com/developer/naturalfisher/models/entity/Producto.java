@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "producto")
-@JsonIgnoreProperties({"items", "items_promocion", "items_promocion_venta", "inventarios"})
+@JsonIgnoreProperties({"items", "items_promocion", "items_promocion_venta", "inventarios", "estadisticas_mes"})
 public class Producto implements Serializable {
 	
 	@Id
@@ -70,6 +70,16 @@ public class Producto implements Serializable {
 	 */
 	@Column(nullable = false, length = 2)
 	private String realiza_inventario;
+	
+	/**
+     * Fase 4 Tarea 1
+     * @author RagooS
+     * @fecha 01/08/2022
+     * @descripcion nuevas variables
+     */
+	@OneToMany(mappedBy = "producto")//, cascade = CascadeType.ALL, orphanRemoval = true
+	@JsonIgnoreProperties({"producto", "hibernateLazyInitializer","handler"})
+	private List<EstadisticasMesProducto> estadisticas_mes;
 	
 	public Long getId() {
 		return id;
@@ -189,6 +199,20 @@ public class Producto implements Serializable {
 
 	public void setItems_promocion_venta(List<ItemPromocionVenta> items_promocion_venta) {
 		this.items_promocion_venta = items_promocion_venta;
+	}
+	
+	/**
+     * Fase 4 Tarea 1
+     * @author RagooS
+     * @fecha 01/08/2022
+     * @descripcion get y sets para las nuevas variables
+     */
+	public List<EstadisticasMesProducto> getEstadisticas_mes() {
+		return estadisticas_mes;
+	}
+
+	public void setEstadisticas_mes(List<EstadisticasMesProducto> estadisticas_mes) {
+		this.estadisticas_mes = estadisticas_mes;
 	}
 
 	/**

@@ -12,6 +12,8 @@ import com.developer.naturalfisher.models.dao.IInversionDao;
 import com.developer.naturalfisher.models.entity.Inventario;
 import com.developer.naturalfisher.models.entity.Inversion;
 import com.developer.naturalfisher.models.entity.ItemInversion;
+import com.developer.naturalfisher.models.transporte.DetalleInversiones;
+import com.developer.naturalfisher.utilidades.Utilidades;
 
 /**
  * de RagooS
@@ -35,6 +37,9 @@ public class InversionServiceImpl implements IInversionService {
 	
 	@Autowired
 	IInventarioService inventarioService;
+	
+	@Autowired
+	
 
 	/**
      * --------------================ METODOS =================--------------------------------
@@ -50,8 +55,19 @@ public class InversionServiceImpl implements IInversionService {
      * @Fecha 08/02/2022 antes
      */
 	@Override
-	public List<Inversion> findAll() {
-		return inversionDao.findAll();
+	public DetalleInversiones findAll() {
+		DetalleInversiones detalle = new DetalleInversiones();
+		detalle.setFecha("TODAS");
+		
+		List<Inversion> inversiones = inversionDao.findAll();
+		
+		if(inversiones != null && !inversiones.isEmpty()) {
+			detalle.setInversiones(inversiones);
+			detalle.setCantInversiones(0);
+			detalle.setTotal(consultarTotalInversionRango("TODAS"));
+		}
+		
+		return detalle;
 	}
 
 	/**
@@ -147,13 +163,9 @@ public class InversionServiceImpl implements IInversionService {
 				item.setInversion(inversionVacia);
 				ItemInversion itemSave = itemInversionService.save(item);
 				
-				if(itemSave != null) {
+				if(itemSave != null && itemSave.getProducto() != null) {
 					
-					Inventario inventario = inventarioService.seleccionarUtimoInventarioProducto(itemSave.getProducto().getId());
-					
-					if(inventario != null) {
-						System.out.print("hola");
-					} 
+					inventarioService.inventariar(itemSave.getProducto(), null, null);
 					
 				}
 			}
@@ -170,6 +182,137 @@ public class InversionServiceImpl implements IInversionService {
 	@Override
 	public Inversion findById(Long id) {
 		return inversionDao.findById(id).orElse(null);
+	}
+
+	/**
+	 * Fase 4 Tarea 3
+     * @Autor RagooS
+     * @Descripccion Metodo permite obtener el detalle de las inversiones en mes
+     * @Fecha 22/09/2022 
+     */
+	@Override
+	public DetalleInversiones detalleInversionesEnMes(String fecha) {
+		// TODO Auto-generated method stub
+		System.out.println("#### INICIA METODO detalleInversionesEnMes() PARA CONSULTAR INVERSIONES EN MES AÑO  ####");
+		
+		System.out.println("#### ANTES DE EJECUTAR EL METODO InversionesEnMes() fecha: " + fecha + "  ####");
+		List<Inversion> inversiones = InversionesEnMes(fecha);
+		DetalleInversiones detalleInversiones = new DetalleInversiones();
+		detalleInversiones.setFecha(fecha);
+		
+		System.out.println("#### DESPUES DE EJECUTAR EL METODO InversionesEnMes()  ####");
+		
+		if(inversiones != null && !inversiones.isEmpty()) {
+			System.out.println("#### SE ENCONTRARON inversiones: " + inversiones.size() + " TOTALES EN LA CONCULTA  ####");
+			
+			detalleInversiones.setCantInversiones(inversiones.size());
+			detalleInversiones.setInversiones(inversiones);
+			
+			System.out.println("#### ANTES DE EJECUTAR EL METODO consultarTotalInversionMesAño() fecha: " + fecha + "  ####");
+			
+			detalleInversiones.setTotal(consultarTotalInversionRango(fecha));
+		} else {
+			System.out.println("#### NO SE ENCONTRARON INVERSIONES  ####");
+			
+			detalleInversiones = null;
+		}
+		
+		return detalleInversiones;
+	}
+
+	/**
+	 * Fase 4 Tarea 3
+     * @Autor RagooS
+     * @Descripccion Metodo permite obtener las inversiones en mes
+     * @Fecha 22/09/2022 
+     */
+	@Override
+	public List<Inversion> InversionesEnMes(String fecha) {
+		System.out.println("#### INICIA METODO InversionesEnMes() PARA CONSULTAR INVERSIONES EN MES AÑO  ####");
+		
+		String mount = "";
+		String year = "";
+		
+		if(fecha.contains("/")) {
+			String[] fechArr = fecha.split("/"); 
+			year = fechArr[0];
+			mount = fechArr[1];
+			
+			if( !mount.equals("") && !year.equals("")) {
+				
+				try {
+					System.out.println("#### SE VA A REALIZAR LA CONSULTA DE LAS INVERSIOJNES EN EL MES: " + mount + " AÑO: " + year + "  ####");
+					return inversionDao.consultarInversionesEnMesAno(Integer.parseInt(mount), Integer.parseInt(year));
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					System.out.println("#### ERROR AL EJECUTAR LA CONSULTA " + e.getMessage() + "  ####");
+				}
+				
+			}
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Fase 4 Tarea 3
+     * @Autor RagooS
+     * @Descripccion Metodo permite obtener el precio total de las inversiones en el mes
+     * @Fecha 22/09/2022 
+     */
+	@Override
+	public Double consultarTotalInversionRango(String rango) {
+		System.out.println("#### INICIA METODO consultarTotalInversionMesAño() PARA CONSULTAR EL VALOR TOTAL DE LAS INVERSIONES EN MES AÑO  ####");
+		
+		String mount = "";
+		String year = "";
+		
+		if(rango.contains("/")) {
+			String[] fechArr = rango.split("/"); 
+			year = fechArr[0];
+			mount = fechArr[1];
+			
+			if( !mount.equals("") && !year.equals("")) {
+				
+				try {
+					System.out.println("#### SE VA A REALIZAR LA CONSULTA DEL TOTAL EN EL MES: " + mount + " AÑO: " + year + "  ####");
+					return inversionDao.consultarTotalInversionEnMesAno(Integer.parseInt(mount), Integer.parseInt(year));
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					System.out.println("#### ERROR AL EJECUTAR LA CONSULTA " + e.getMessage() + "  ####");
+				}
+				
+			}
+		} else if(rango.contains("TODAS")) {
+			try {
+				System.out.println("#### SE VA A REALIZAR LA CONSULTA DEL TOTAL DE TODAS LAS INVERSIONES  ####");
+				return inversionDao.consultarTotalTodasInversion();
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				System.out.println("#### ERROR AL EJECUTAR LA CONSULTA " + e.getMessage() + "  ####");
+			}
+		}
+		
+		return null;
+	}
+
+	@Override
+	public List<Inversion> consultarInversionesEnFecha(String fecha) {
+		
+		System.out.println("#### INICIA METODO consultarInversionesEnFecha() PARA CONSULTAR LAS INVERSIONES REALIZADAS EN EL DIA  ####");
+		
+		List<Inversion> inversiones = null;
+		
+		List<Date> fechas = Utilidades.obtenerRangoFechaDia(fecha);
+		
+		if(fechas != null && !fechas.isEmpty()) {
+			inversiones = inversionDao.consultaInversionesEnFecha(fechas.get(0), fechas.get(1) );
+		}
+		
+		return inversiones;
 	}
 
 }

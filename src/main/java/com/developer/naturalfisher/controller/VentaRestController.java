@@ -53,6 +53,7 @@ public class VentaRestController {
 	
 	@GetMapping("/ventasEnFecha")
 	public List<Venta> findByFecha(@RequestParam("fecha") String fecha) {
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/venta/ventasEnFecha  ####");
 		return ventaService.ventasEnFecha(fecha);
 	}
 	

@@ -31,37 +31,50 @@ public class ProductoRestController {
 	
 	@GetMapping("/producto/{id}")
 	public Producto findById(@PathVariable Long id) {
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/producto id: " + id + " ####");
 		return productoService.findById(id);
 	}
 	
 	@GetMapping("/productos")
 	public ProductosTransporte findAll(){
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/productos  ####");
 		return productoService.findProductosGeneralActivos();
 	}
 	
 	@GetMapping("/producto/codigo/{codigo}")
 	public Producto findByCodigo(@PathVariable String codigo) {
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/codigo  codigo:" + codigo + "  ####");
 		return productoService.findByCodigo(codigo);
 	}
 	
 	@PostMapping(value = "/save")
 	public Producto save(@RequestBody Producto productoNew) {
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/save  ####");
 		return productoService.save(productoNew);
 	}
 	
 	@PostMapping(value = "/eliminar")
 	public Boolean delete(@RequestBody Producto producto) {
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/eliminar  ####");
 		return productoService.delete(producto);
 	}
 	
 	@GetMapping("/productosVenta")
 	public ProductosTransporte findAll_ActivoVenta(){
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/productosVenta  ####");
 		return productoService.findProductosGeneralActivos();
 	}
 	
 	@GetMapping("/productosPromoVenta")
 	public List<Producto> findProductosGeneral() {
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/productosPromoVenta  ####");
 		return productoService.findAll_ActivoVenta();
+	}
+	
+	@GetMapping("/productosActivosInversion")
+	public ProductosTransporte findProductosActivosInversion() {
+		System.out.println("#### INICIA LLAMADO A RUTA /appi/producto/productosActivosInversion  ####");
+		return productoService.findAll_ActivoInversion();
 	}
 	
 }

@@ -52,6 +52,18 @@ public class ItemPromocionVenta implements Serializable {
 	
 	@Column(nullable = false)
 	private Double total;
+	
+	@Column(nullable = false)
+	private Double precio_venta_calculado;
+	
+	@Column(nullable = false)
+	private Double total_calculado;
+	
+	@Column(nullable = false)
+	private Double porcentage;
+	
+	@Column(nullable = false)
+	private Double ganancia;
 
 	public Long getId() {
 		return id;
@@ -100,6 +112,36 @@ public class ItemPromocionVenta implements Serializable {
 	public void setProducto(Producto producto) {
 		this.producto = producto;
 	}
-	
-	
+
+	public Double getPrecio_venta_calculado() {
+		return precio_venta_calculado;
+	}
+
+	public void setPrecio_venta_calculado(Double precio_venta_calculado) {
+		this.precio_venta_calculado = precio_venta_calculado;
+	}
+
+	public Double getTotal_calculado() {
+		return total_calculado;
+	}
+
+	public void setTotal_calculado(Double total_calculado) {
+		this.total_calculado = total_calculado;
+	}
+
+	public Double getPorcentage() {
+		return porcentage;
+	}
+
+	public void setPorcentage(Double porcentage) {
+		this.porcentage = porcentage;
+	}
+
+	public Double getGanancia() {
+		return ganancia;
+	}
+
+	public void setGanancia(Double ganancia) {
+		this.ganancia = ganancia;
+	}
 }

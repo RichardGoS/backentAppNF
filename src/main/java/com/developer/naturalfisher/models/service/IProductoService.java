@@ -22,5 +22,8 @@ public interface IProductoService {
 	public boolean delete(Producto producto);
 	public List<Producto> findAll_ActivoVenta();
 	public ProductosTransporte findProductosGeneralActivos();
+	public ProductosTransporte findAll_ActivoInversion();
+	
+	public List<Producto> findAll();
 	
 }

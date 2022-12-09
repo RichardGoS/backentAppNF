@@ -3,36 +3,37 @@ package com.developer.naturalfisher.models.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
+ * Fase 4 Tarea 3
  * de RagooS
  * Autor: Richard Gomez O.
  * Para: EmpresaDevelopers.Backend.NaturalFisher
- * Fecha: 11/06/2021
+ * Fecha: 12/09/2022
  */
 
 @Entity
-@Table(name = "cliente")
-@JsonIgnoreProperties({"ventas"})
-public class Cliente implements Serializable {
-
+@Table(name = "proveedor")
+@JsonIgnoreProperties({"inversiones"})
+public class Proveedor implements Serializable{
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 20)
+	private String nit;
+	
+	@Column(nullable = false, length = 100)
 	private String nombre;
 	
 	@Column(nullable = false, length = 300)
@@ -41,9 +42,11 @@ public class Cliente implements Serializable {
 	@Column(nullable = false)
 	private String telefono;
 	
-	@OneToMany(mappedBy = "cliente")
-	@JsonIgnoreProperties({"cliente", "hibernateLazyInitializer","handler"})
-	private List<Venta> ventas;
+	@Column(nullable = true)
+	private String telefono_respaldo;
+	
+	@Column(nullable = true, length = 300)
+	private String descripcion;
 	
 	/**
 	 * Estado ACTIVO , INACTIVO 
@@ -51,24 +54,27 @@ public class Cliente implements Serializable {
 	@Column(nullable = false, length = 10)
 	private String estado;
 	
-	/**
-     * Fase 4 Tarea 2
-     * @author RagooS
-     * @fecha 30/07/2022
-     * @descripcion nuevas variables
-     */
-	@Column(nullable = true)
-	private String telefono_respaldo;
+	@Column(nullable = false, length = 100)
+	private String ciudad;
 	
-	@Column(nullable = true, length = 300)
-	private String direccion_respaldo;
-	
+	@OneToMany(mappedBy = "proveedor")
+	@JsonIgnoreProperties({"proveedor", "hibernateLazyInitializer","handler"})
+	private List<Inversion> inversiones;
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getNit() {
+		return nit;
+	}
+
+	public void setNit(String nit) {
+		this.nit = nit;
 	}
 
 	public String getNombre() {
@@ -94,13 +100,13 @@ public class Cliente implements Serializable {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	
-	public List<Venta> getVentas() {
-		return ventas;
+
+	public String getDescripcion() {
+		return descripcion;
 	}
 
-	public void setVentas(List<Venta> ventas) {
-		this.ventas = ventas;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public String getEstado() {
@@ -111,19 +117,20 @@ public class Cliente implements Serializable {
 		this.estado = estado;
 	}
 
-	
-	/**
-     * Fase 4 Tarea 2
-     * @author RagooS
-     * @fecha 30/07/2022
-     * @descripcion metodos get y  set de las variables creadas
-     */
-	public String getDireccion_respaldo() {
-		return direccion_respaldo;
+	public String getCiudad() {
+		return ciudad;
 	}
 
-	public void setDireccion_respaldo(String direccion_respaldo) {
-		this.direccion_respaldo = direccion_respaldo;
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
+	}
+
+	public List<Inversion> getInversiones() {
+		return inversiones;
+	}
+
+	public void setInversiones(List<Inversion> inversiones) {
+		this.inversiones = inversiones;
 	}
 
 	public String getTelefono_respaldo() {
@@ -133,10 +140,5 @@ public class Cliente implements Serializable {
 	public void setTelefono_respaldo(String telefono_respaldo) {
 		this.telefono_respaldo = telefono_respaldo;
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 }

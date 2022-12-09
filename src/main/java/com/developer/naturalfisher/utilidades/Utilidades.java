@@ -120,5 +120,48 @@ public class Utilidades {
 		
 		return strFecha;
 	}
+	
+	
+	/**
+	 * Fase 4 Tarea 1
+	 * @Autor RagooS
+     * @Descripccion Metodo permite extraer el mes y año de un String fecha = 2022/08
+     * @Fecha 06/08/2022
+	 * @param fecha
+	 * @return
+	 */
+	public static String[] estraerMesAño(String fecha) {
+		
+		if(fecha.contains("/")) {
+			String[] fechArr = fecha.split("/"); 
+			return fechArr;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Fase 4 Tarea 1
+	 * @Autor RagooS
+     * @Descripccion Metodo permite obtener la fecha de un mes y año determinado
+     * @Fecha 07/08/2022
+	 * @param fecha
+	 * @return
+	 */
+	public static Date obtenerFechaEnMes(String fecha) {
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		String[] arrFecha = estraerMesAño(fecha);
+		Date date = null;
+		if(arrFecha != null && arrFecha.length > 1) {
+			try {
+				date = format.parse("01/" + arrFecha[1] + "/" + arrFecha[0]);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return date;
+	}
 
 }

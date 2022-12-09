@@ -26,6 +26,19 @@ public interface IInversionDao extends JpaRepository<Inversion, Long> {
 	@Procedure(name = "obtenerInversionesPorProducto")
 	String obtenerInversionesPorProducto(@Param("product_id") Long product_id);
 	
-	//SELECT * FROM `inversion` WHERE  producto_id = 2
+	//SELECT SUM(total) FROM inversion WHERE MONTH(fecha) = 08 AND YEAR(fecha) = 2022
+	@Query(nativeQuery = false,value = " SELECT SUM(total) FROM Inversion i WHERE MONTH(fecha) = ?1 and YEAR(fecha) = ?2 ORDER BY fecha")
+	Double consultarTotalInversionEnMesAno(int mount, int year);
+	
+	//SELECT * FROM inversion WHERE MONTH(fecha) = 08 AND YEAR(fecha) = 2022
+	@Query(nativeQuery = false,value = " SELECT i FROM Inversion i WHERE MONTH(fecha) = ?1 and YEAR(fecha) = ?2 ORDER BY fecha")
+	List<Inversion> consultarInversionesEnMesAno(int mount, int year);
+	
+	//SELECT SUM(total) FROM inversion;
+	@Query(nativeQuery = false,value = " SELECT SUM(total) FROM Inversion i")
+	Double consultarTotalTodasInversion();
+	
+	@Query(nativeQuery = false,value = " SELECT i FROM Inversion i WHERE fecha BETWEEN  ?1 and ?2 ORDER BY fecha")
+	List<Inversion> consultaInversionesEnFecha(Date fecha1, Date fecha2);
 
 }

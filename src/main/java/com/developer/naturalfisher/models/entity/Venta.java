@@ -39,16 +39,17 @@ public class Venta implements Serializable {
 	@JsonIgnoreProperties({"venta", "hibernateLazyInitializer","handler"})
 	private List<ItemVenta> items;
 	
-	/*@ManyToMany(mappedBy = "ventas")
-	private Set<Producto> productos;*/
+	/**
+     * Fase 4 Tarea 2
+     * @author RagooS
+     * @fecha 30/07/2022
+     * @descripcion nuevas variables
+     */
+	@Column(nullable = true, length = 300)
+	private String direccion;
 	
-	/*@JoinTable(
-    name = "productos_ventas",
-    joinColumns = @JoinColumn(name = "FK_PRODUCTO", nullable = false),
-    inverseJoinColumns = @JoinColumn(name="FK_VENTA", nullable = false)
-	)
-	@ManyToMany(cascade = CascadeType.ALL)
-	private List<Producto> productos;*/
+	@Column(nullable = true)
+	private String telefono;
 	
 	public Long getId() {
 		return id;
@@ -88,6 +89,29 @@ public class Venta implements Serializable {
 
 	public void setItems(List<ItemVenta> items) {
 		this.items = items;
+	}
+	
+	/**
+     * Fase 4 Tarea 2
+     * @author RagooS
+     * @fecha 30/07/2022
+     * @descripcion metodos get y  set de las variables creadas
+     */
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
 
 	/**

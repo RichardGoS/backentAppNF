@@ -24,5 +24,8 @@ public interface IProductoDao extends JpaRepository<Producto, Long> {
 	
 	@Query(nativeQuery = false, value = " SELECT v FROM Producto v WHERE realiza_inventario = ?1 ORDER BY nombre")
 	List<Producto> findAll_EstadoInventario(String estado);
+	
+	@Query(nativeQuery = false, value = " SELECT v FROM Producto v WHERE realiza_inventario = ?1 AND estado = ?2 ORDER BY nombre")
+	List<Producto> findAll_Estado_ManejaInventario(String manejaInv, String estado);
 
 }

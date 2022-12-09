@@ -217,4 +217,41 @@ public class ProductoServiceImpl implements IProductoService {
 		return productosTransporte;
 	}
 
+	/**
+	 * Fase 4 Tarea 1
+     * @Autor RagooS
+     * @Descripccion Metodo permite obtener la lista de todos los productos
+     * @Fecha 01/08/2022
+     */
+	@Override
+	public List<Producto> findAll() {
+		// TODO Auto-generated method stub
+		return productoDao.findAll();
+	}
+
+	/**
+	 * Fase 4 Tarea 3
+     * @Autor RagooS
+     * @Descripccion Metodo permite obtener la lista de todos los productos activos para la inversion
+     * @Fecha 01/08/2022
+     */
+	@Override
+	public ProductosTransporte findAll_ActivoInversion() {
+		System.out.println("#### INICIA EL METODO findAll_ActivoInversion()  ####");
+		ProductosTransporte productosTransporte = new ProductosTransporte();
+		
+		System.out.println("#### ANTES DE LLAMAR AL METODO findAll_Estado_ManejaInventario()  ####");
+		List<Producto> productos = productoDao.findAll_Estado_ManejaInventario("S", EnumParametros.ESTADO_ACTIVO.getValor());
+		System.out.println("#### DESPUES DE LLAMAR AL METODO findAll_Estado_ManejaInventario()  ####");
+		
+		if(productos != null && !productos.isEmpty()) {
+			System.out.println("#### SE ENCONTRARON " + productos.size() + " PRODUCTOS  ####");
+			productosTransporte.setProductos(productos);
+		} else {
+			System.out.println("#### NO SE ENCONTRARON PRODUCTOS  ####");
+			productosTransporte.setProductos(null);
+		}
+		return productosTransporte;
+	}
+
 }

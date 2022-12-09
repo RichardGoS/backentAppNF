@@ -136,9 +136,39 @@ public class VentaServiceImpl implements IVentaService {
 									ItemPromocionVenta itemPromocionVenta = new ItemPromocionVenta();
 									itemPromocionVenta.setProducto(itemPromo.getProducto());
 									itemPromocionVenta.setPromocion_venta(promocionVentaAlmacenada);
+									
+									System.out.println("#### SE VA A CALCULAR EL PRECIO VENTA REAL DEL ITEM PARA EL PRODUCTO ####");
+									
+									double porcenProductoEnPromo = 0.0;
+									double precioTotalVentaReal = 0.0;
+									double precioVentaReal = 0.0;
+									double ganancia = 0.0;
+									
+									System.out.println("#### ANTES DE CALCULAR porcenProductoEnPromo: " + " ####");
+									if(promocionVentaAlmacenada.getGanancia() >= 0) {
+										porcenProductoEnPromo = itemPromo.getTotal() / promocionVentaAlmacenada.getTotalCalculado();
+									} else {
+										porcenProductoEnPromo = itemPromo.getTotal() / promocionVentaAlmacenada.getTotal();
+									}
+									
+									precioTotalVentaReal = promocionVentaAlmacenada.getTotal() * porcenProductoEnPromo;
+									precioVentaReal = precioTotalVentaReal / itemPromo.getCant_peso();
+									
+									ganancia = precioTotalVentaReal - itemPromo.getTotal();
+									
+									System.out.println("#### CALCULADO porcenProductoEnPromo: " + porcenProductoEnPromo + "% ####");
+									System.out.println("#### CALCULADO precioTotalVentaReal: $" + precioTotalVentaReal + " ####");
+									System.out.println("#### CALCULADO precioVentaReal: $" + precioVentaReal + " ####");
+									System.out.println("#### CALCULADO ganancia: $" + ganancia + " ####");
+									
+									itemPromocionVenta.setPorcentage(porcenProductoEnPromo);
+									itemPromocionVenta.setPrecio_venta_calculado(precioVentaReal);
+									itemPromocionVenta.setTotal_calculado(itemPromo.getTotal());
+									itemPromocionVenta.setGanancia(ganancia);
+									
 									itemPromocionVenta.setPrecio_venta(itemPromo.getPrecio_venta());
 									itemPromocionVenta.setCant_peso(itemPromo.getCant_peso());
-									itemPromocionVenta.setTotal(itemPromo.getTotal());
+									itemPromocionVenta.setTotal(precioTotalVentaReal);
 									
 									System.out.println("#### ANTES DE ALMACENAR EL ITEM PROMOCION VENTA ####");
 									ItemPromocionVenta itemPromocionVentaAlmacenada = itemPromocionVentaService.save(itemPromocionVenta);
@@ -283,18 +313,26 @@ public class VentaServiceImpl implements IVentaService {
 	public List<Venta> ventasEnMes(String fecha) {
 		// TODO Auto-generated method stub
 		
+		System.out.println("#### INICIA METODO ventasEnMes() PARA CONSULTAR VENTAS EN MES AÑO EN LA BD  ####");
+		
 		String mount = "";
 		String year = "";
 		
-		if(fecha.contains("/")) {
-			String[] fechArr = fecha.split("/"); 
+		String[] fechArr = Utilidades.estraerMesAño(fecha);
+		
+		if(fechArr != null && fechArr.length > 1) {
 			year = fechArr[0];
 			mount = fechArr[1];
 			
 			if( !mount.equals("") && !year.equals("")) {
+				
+				System.out.println("#### SE VA A LLAMAR AL METODO DE CONSULTA CON LOS DATOS  --> mes: "  +  mount + "  año: " + year + "  ####");
+				
 				return ventaDao.consultaVentasEnMesAño(Integer.parseInt(mount), Integer.parseInt(year));
 			}
 			
+		} else {
+			System.out.println("#### ERROR: NO FUE POSIBLE CAPTURAR EL MES Y AÑO PARA LA CONSULTA  ####");
 		}
 		
 		return null;

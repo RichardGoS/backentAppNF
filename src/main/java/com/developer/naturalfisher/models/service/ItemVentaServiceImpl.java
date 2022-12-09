@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import com.developer.naturalfisher.models.dao.IItemVentaDao;
 import com.developer.naturalfisher.models.entity.ItemPromocionVenta;
 import com.developer.naturalfisher.models.entity.ItemVenta;
+import com.developer.naturalfisher.models.entity.Producto;
 import com.developer.naturalfisher.models.entity.PromocionVenta;
 import com.developer.naturalfisher.models.entity.Venta;
+import com.developer.naturalfisher.utilidades.Utilidades;
 
 /**
  * de RagooS
@@ -162,6 +164,112 @@ public class ItemVentaServiceImpl implements IItemVentaService {
 		}
 		
 		return itemsPromo;
+	}
+
+
+	/**
+	 * Fase 4 Tarea 1
+	 * @author RagooS
+	 * @Descripccion Metodo permite obtener los items registrados de las ventas por producto en un mes del año
+	 * @fecha 21/05/2022
+	 */
+	@Override
+	public List<ItemVenta> obtenerItemsVentasPorProductoEnMesAno(String fecha, Producto producto) {
+		System.out.println("#### INICIA METODO obtenerItemsVentasPorProductoEnMesAno() PARA CONSULTAR ITEM_VENTA POR PRODUCTO EN MES AÑO EN LA BD  ####");
+		
+		String[] arrFecha = Utilidades.estraerMesAño(fecha);
+		String mount = "";
+		String year = "";
+		List<ItemVenta> items = new ArrayList<ItemVenta>();
+		
+		if(arrFecha != null && arrFecha.length > 1) {
+			year = arrFecha[0];
+			mount = arrFecha[1];
+			
+			if( !mount.equals("") && !year.equals("")) {
+				
+				System.out.println("#### SE VA A LLAMAR AL METODO DE CONSULTA CON LOS DATOS  --> mes: "  +  mount + "  año: " + year + "  ####");
+				
+				String strItems = itemDao.obtenerItemsVentasPorProductoEnMesAno(producto.getId(), Integer.parseInt(mount), Integer.parseInt(year));
+				System.out.println("#### RESPUESTA DEL PROCEDIMIENTO DATOS  -->  "  +  strItems + "  ####");
+				if(strItems != null && !strItems.equals("")) {
+					if(strItems.contains(",")) {
+						String[] arrItems = strItems.split(",");
+						
+						if( arrItems != null && arrItems.length > 0) {
+							for(String strItem:arrItems) {
+								if(strItem.contains(";")) {
+									String[] arrItemTemp  = strItem.split(";");
+									if(arrItemTemp != null && arrItemTemp.length > 1) {
+										ItemVenta itemVenta = new ItemVenta();
+										itemVenta.setCant_peso(Double.parseDouble(arrItemTemp[0]));
+										itemVenta.setTotal(Double.parseDouble(arrItemTemp[1]));
+										
+										items.add(itemVenta);
+									}
+								}
+							}
+						}
+					}
+				} else {
+					System.out.println("#### NO SE ENCONTRARON DATOS EN LA CONSULTA  ####");
+				}
+			}
+		} else {
+			System.out.println("#### ERROR: NO FUE POSIBLE CAPTURAR EL MES Y AÑO PARA LA CONSULTA  ####");
+		}
+		
+		return items;
+	}
+
+
+	@Override
+	public List<ItemVenta> obtenerItemsVentasConPromociones(String fecha) {
+		System.out.println("#### INICIA METODO obtenerItemsVentasPorProductoEnMesAno() PARA CONSULTAR ITEM_VENTA POR PRODUCTO EN MES AÑO EN LA BD  ####");
+		
+		String[] arrFecha = Utilidades.estraerMesAño(fecha);
+		
+		String mount = "";
+		String year = "";
+		List<ItemVenta> items = new ArrayList<ItemVenta>();
+		
+		if(arrFecha != null && arrFecha.length > 1) {
+			year = arrFecha[0];
+			mount = arrFecha[1];
+			
+			if( !mount.equals("") && !year.equals("")) {
+				System.out.println("#### SE VA A LLAMAR AL METODO DE CONSULTA CON LOS DATOS  --> mes: "  +  mount + "  año: " + year + "  ####");
+				
+				String strItems = itemDao.obtenerItemsVentaConPromocionEnMesAno(Integer.parseInt(mount), Integer.parseInt(year));
+				
+				System.out.println("#### RESPUESTA DEL PROCEDIMIENTO DATOS  -->  "  +  strItems + "  ####");
+				
+				if(strItems != null && !strItems.equals("")) {
+					if(strItems.contains(",")) {
+						String[] arrIdItems = strItems.split(",");
+						
+						if(arrIdItems.length > 0) {
+							for(int i=0; i<arrIdItems.length; i++) {
+								ItemVenta item = itemDao.findById(Long.parseLong(arrIdItems[i])).orElse(null);
+								
+								if(item != null) {
+									items.add(item);
+								}
+							}
+						}
+						
+						
+					}
+				} else {
+					System.out.println("#### NO SE ENCONTRARON DATOS EN LA CONSULTA  ####");
+				}
+			}
+			
+			
+		}
+		
+		
+		return items;
 	}	
 
 }
